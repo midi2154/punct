@@ -75,23 +75,43 @@ func Nword(s string) string {
 	return strings.Join(word, " ")
 }
 
-func Articles(text string) string {
-	word := strings.Fields(text)
+func Article(s string) string {
+	word := strings.Fields(s)
 
 	for i := 0; i < len(word); i++ {
-		if i+1 < len(word) && len(word[i+1]) > 0 {
-			isVowel := strings.ContainsRune("aeiouhAEIOUH", rune(word[i+1][0]))
+		if i+1 < len(word) {
+
+			next := strings.Trim(word[i+1], `"'.,!?;:`)
+
+			var ch byte
+			for j := 0; j < len(next); j++ {
+				if (next[j] >= 'a' && next[j] <= 'z') || (next[j] >= 'A' && next[j] <= 'Z') {
+					ch = next[j]
+					break
+				}
+			}
+
+			if ch == 0 {
+				continue
+			}
+
+			isVowel := strings.ContainsAny(string(ch), "aeiouAEIOU")
+
 			if word[i] == "a" && isVowel {
 				word[i] = "an"
-			} else if word[i] == "A" && isVowel {
+			}
+			if word[i] == "A" && isVowel {
 				word[i] = "An"
-			} else if word[i] == "an" && !isVowel {
+			}
+			if word[i] == "an" && !isVowel {
 				word[i] = "a"
-			} else if word[i] == "An" && !isVowel {
+			}
+			if word[i] == "An" && !isVowel {
 				word[i] = "A"
 			}
 		}
 	}
+
 	return strings.Join(word, " ")
 }
 
